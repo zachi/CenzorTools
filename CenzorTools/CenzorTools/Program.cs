@@ -16,6 +16,13 @@ namespace CenzorTools
    // Read the file and display it line by line.
    System.IO.StreamReader inputFile =
       new System.IO.StreamReader("data.csv");
+   inputFile.ReadLine();
+   inputFile.ReadLine();
+   inputFile.ReadLine();
+   inputFile.ReadLine();
+   inputFile.ReadLine();
+   inputFile.ReadLine();
+
    string[] subjectIds = inputFile.ReadLine().Split(',');
    string[] firstSessions = inputFile.ReadLine().Split(';');
    string[] secondSessions = inputFile.ReadLine().Split(',');
@@ -48,26 +55,21 @@ namespace CenzorTools
    }
 
    // encodes the output as text.
-   using (System.IO.StreamWriter file =
-       new System.IO.StreamWriter(@"C:\Users\Public\TestFolder\WriteLines2.txt"))
+   using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"results" + DateTime.Now.ToString("yyyy-dd-M-HHmm") +  ".csv"))
    {
     foreach (double[] session in result)
     {
-
      foreach (double third in session)
      {
-      file.WriteLine(third / 3);
+      file.Write(third / subjectIds.Length + ",");
      }
-     
-      
-     
+     file.WriteLine();
     }
    }
 
    inputFile.Close();
 
-   // Suspend the screen.
-   Console.ReadLine();
+   
   }
  }
 
@@ -99,7 +101,7 @@ namespace CenzorTools
   public Session(string data)
   {
    this.data = data;
-   this.thirds = data.Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').Select(double.Parse).ToList(); 
+   this.thirds = data.Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').Select(double.Parse).ToList();
   }
 
   public string data { get; set; }
