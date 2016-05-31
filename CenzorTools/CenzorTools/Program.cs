@@ -14,25 +14,57 @@ namespace CenzorTools
 
 
    // Read the file and display it line by line.
-   System.IO.StreamReader file =
+   System.IO.StreamReader inputFile =
       new System.IO.StreamReader("data.csv");
-   string[] subjectIds = file.ReadLine().Split(',');
-   string[] firstSessions = file.ReadLine().Split(';');
-   string[] secondSessions = file.ReadLine().Split(',');
-   string[] thirdSessions = file.ReadLine().Split(';');
-   string[] forthSessions = file.ReadLine().Split(';');
+   string[] subjectIds = inputFile.ReadLine().Split(',');
+   string[] firstSessions = inputFile.ReadLine().Split(';');
+   string[] secondSessions = inputFile.ReadLine().Split(',');
+   string[] thirdSessions = inputFile.ReadLine().Split(';');
+   string[] forthSessions = inputFile.ReadLine().Split(';');
 
    for (int i = 0; i < subjectIds.Length; i++)
    {
-    Subjects.Add( new Subject(subjectIds[i], firstSessions[i], secondSessions[i], thirdSessions[i], forthSessions[i]));
+    Subjects.Add(new Subject(subjectIds[i], firstSessions[i], secondSessions[i], thirdSessions[i], forthSessions[i]));
 
-   
+
    }
 
+   //List<List<double>> result = new List<List<double>>(4);
+   double[][] result = new double[4][];
+   result[0] = new double[4];
+   result[1] = new double[4];
+   result[2] = new double[4];
+   result[3] = new double[4];
 
-   
+   foreach (var subject in Subjects)
+   {
+    for (int i = 0; i < subject.Sessions.Count; i++)
+    {
+     for (int j = 0; j < subject.Sessions[i].thirds.Count; j++)
+     {
+      result[i][j] += subject.Sessions[i].thirds[j];
+     }
+    }
+   }
 
-   file.Close();
+   // encodes the output as text.
+   using (System.IO.StreamWriter file =
+       new System.IO.StreamWriter(@"C:\Users\Public\TestFolder\WriteLines2.txt"))
+   {
+    foreach (double[] session in result)
+    {
+
+     foreach (double third in session)
+     {
+      file.WriteLine(third / 3);
+     }
+     
+      
+     
+    }
+   }
+
+   inputFile.Close();
 
    // Suspend the screen.
    Console.ReadLine();
@@ -58,12 +90,16 @@ namespace CenzorTools
 
 
  }
- public class Session {
-  
+ public class Session
+ {
+
+  public List<double> thirds { get; set; }
+
 
   public Session(string data)
   {
    this.data = data;
+   this.thirds = data.Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').Select(double.Parse).ToList(); 
   }
 
   public string data { get; set; }
