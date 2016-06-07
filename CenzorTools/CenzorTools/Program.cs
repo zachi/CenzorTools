@@ -16,12 +16,12 @@ namespace CenzorTools
    // Read the file and display it line by line.
    System.IO.StreamReader inputFile =
       new System.IO.StreamReader("data.csv");
-   inputFile.ReadLine();
-   inputFile.ReadLine();
-   inputFile.ReadLine();
-   inputFile.ReadLine();
-   inputFile.ReadLine();
-   inputFile.ReadLine();
+   //inputFile.ReadLine();
+   //inputFile.ReadLine();
+   //inputFile.ReadLine();
+   //inputFile.ReadLine();
+   //inputFile.ReadLine();
+   //inputFile.ReadLine();
 
    string[] subjectIds = inputFile.ReadLine().Split(',');
    string[] firstSessions = inputFile.ReadLine().Split(';');
@@ -36,6 +36,47 @@ namespace CenzorTools
 
    }
 
+   printSubjectFirstThirds(Subjects, subjectIds);
+   //PrintSessionXThirds(Subjects, subjectIds);
+
+   inputFile.Close();
+
+
+  }
+
+  private static void printSubjectFirstThirds(List<Subject> Subjects, string[] subjectIds)
+  {
+   //List<List<double>> result = new List<List<double>>(4);
+   double[][] result = new double[4][];
+   result[0] = new double[4];
+   result[1] = new double[4];
+   result[2] = new double[4];
+   result[3] = new double[4];
+
+
+   
+   // encodes the output as text.
+   using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"results" + DateTime.Now.ToString("yyyy-dd-M-HHmm") + ".csv"))
+   {
+    file.WriteLine("subject/session,s1,s2,s3,s4");
+    foreach (var subject in Subjects)
+    {
+     file.Write(subject.id + ",");
+     foreach (var session in subject.Sessions)
+     {
+      file.Write(session.thirds[0] + ",");
+     }
+     file.WriteLine();
+    }
+    
+    
+    file.WriteLine();
+   }
+   
+  }
+
+  private static void PrintSessionXThirds(List<Subject> Subjects, string[] subjectIds)
+  {
    //List<List<double>> result = new List<List<double>>(4);
    double[][] result = new double[4][];
    result[0] = new double[4];
@@ -55,7 +96,7 @@ namespace CenzorTools
    }
 
    // encodes the output as text.
-   using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"results" + DateTime.Now.ToString("yyyy-dd-M-HHmm") +  ".csv"))
+   using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"results" + DateTime.Now.ToString("yyyy-dd-M-HHmm") + ".csv"))
    {
     foreach (double[] session in result)
     {
@@ -66,10 +107,6 @@ namespace CenzorTools
      file.WriteLine();
     }
    }
-
-   inputFile.Close();
-
-   
   }
  }
 
